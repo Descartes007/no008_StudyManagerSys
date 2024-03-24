@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SigninMapper">
+
+    <sql id="Base_Column_List">
+        id,user_id,time,day
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Signin">
+        select
+        <include refid="Base_Column_List" />
+        from signin
+        <where>
+            <if test="id != null"> and id= #{id}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Signin">
+        select
+        <include refid="Base_Column_List" />
+        from signin
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from signin
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Signin" useGeneratedKeys="true">
+        insert into signin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="time != null">time,</if>
+                <if test="day != null">day,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="userId != null">#{userId},</if>
+                <if test="time != null">#{time},</if>
+                <if test="day != null">#{day},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Signin">
+        update signin
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="day != null">
+                day = #{day},
+            </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+</mapper>

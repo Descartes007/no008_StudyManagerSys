@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.OrdersMapper">
+
+    <sql id="Base_Column_List">
+        id,course_id,price,order_id,time,user_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Orders">
+        select orders.*, course.img as courseImg, course.name as courseName, course.type as courseType, user.name as userName
+        from orders
+        left join course on orders.course_id = course.id
+        left join user on orders.user_id = user.id
+        <where>
+            <if test="id != null"> and id= #{id}</if>
+            <if test="orderId != null"> and order_id = #{orderId}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="courseId != null"> and course_id = #{courseId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Orders">
+        select
+        <include refid="Base_Column_List" />
+        from orders
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from orders
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Orders" useGeneratedKeys="true">
+        insert into orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="courseId != null">course_id,</if>
+                <if test="price != null">price,</if>
+                <if test="orderId != null">order_id,</if>
+                <if test="time != null">time,</if>
+                <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="courseId != null">#{courseId},</if>
+                <if test="price != null">#{price},</if>
+                <if test="orderId != null">#{orderId},</if>
+                <if test="time != null">#{time},</if>
+                <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Orders">
+        update orders
+        <set>
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id} 
+    </update>
+
+</mapper>
